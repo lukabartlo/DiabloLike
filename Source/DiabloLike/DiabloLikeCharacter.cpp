@@ -48,4 +48,23 @@ ADiabloLikeCharacter::ADiabloLikeCharacter()
 void ADiabloLikeCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+	LookAtMouse();
+}
+
+void ADiabloLikeCharacter::LookAtMouse()
+{
+    APlayerController* PC = Cast<APlayerController>(Controller);
+    if (!PC) return;
+
+    FHitResult Hit;
+    PC->GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+
+    FVector Target = Hit.ImpactPoint;
+    FVector Start = GetActorLocation();
+
+    FRotator LookAtRot = (Target - Start).Rotation();
+    LookAtRot.Pitch = 0.f;
+    LookAtRot.Roll = 0.f;
+
+    SetActorRotation(LookAtRot);
 }
